@@ -1,2 +1,2 @@
-# tiny_bdh_xor
+# Tiny BDH XOR example
 Repository with code for 'The little dragon learns to fly' article
