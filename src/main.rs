@@ -1,6 +1,6 @@
 use anyhow::Result;
 use tch::{nn, Device, Kind, Reduction, Tensor};
-use tch::nn::OptimizerConfig;
+use tch::nn::{Init, OptimizerConfig};
 
 /// y = ReLU( (x E) D^T )
 fn relu_lowrank_forward(x: &Tensor, e: &Tensor, d: &Tensor) -> Tensor {
@@ -30,12 +30,12 @@ fn main() -> Result<()> {
     let vs = nn::VarStore::new(dev);
     let root = &vs.root();
 
-    let e  = root.var("E",  &[n,d], nn::Init::Randn { mean: 0.0, stdev: 0.05 });
-    let dx = root.var("Dx", &[n,d], nn::Init::Randn { mean: 0.0, stdev: 0.05 });
-    let dy = root.var("Dy", &[n,d], nn::Init::Randn { mean: 0.0, stdev: 0.05 });
+    let e  = root.var("E",  &[n,d], Init::Randn { mean: 0.0, stdev: 0.05 });
+    let dx = root.var("Dx", &[n,d], Init::Randn { mean: 0.0, stdev: 0.05 });
+    let dy = root.var("Dy", &[n,d], Init::Randn { mean: 0.0, stdev: 0.05 });
 
-    let r_in   = root.var("R_in",   &[3,n], nn::Init::Randn { mean: 0.0, stdev: 0.20 });
-    let w_read = root.var("W_read", &[n,1], nn::Init::Randn { mean: 0.0, stdev: 0.20 });
+    let r_in   = root.var("R_in",   &[3,n], Init::Randn { mean: 0.0, stdev: 0.20 });
+    let w_read = root.var("W_read", &[n,1], Init::Randn { mean: 0.0, stdev: 0.20 });
 
     let mut opt = nn::Adam::default().build(&vs, lr)?;
     let mut sigma = Tensor::zeros(&[n, n], (Kind::Float, dev));
